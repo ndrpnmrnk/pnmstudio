@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNM STUDIO</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <div class="logo">pnm_studio</div>
+            <div class="sub-logo" data-lang="location">UKRAINE, 2025</div>
+        </div>
+        <div class="lang-switch">
+            <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+            <span>/</span>
+            <button class="lang-btn" onclick="setLanguage('ua')">UA</button>
+        </div>
+    </header>
+
+    <div class="hero-banner">
+        <img src="БанерПортфолио.jpg" alt="Ponomarenko Art Banner">
+    </div>
+
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="openTab('projects', this)" data-lang="tab_works">WORKS</button>
+        <button class="tab-btn" onclick="openTab('about', this)" data-lang="tab_about">ABOUT</button>
+    </div>
+
+    <div id="projects" class="section-content active">
+        
+        <div class="filter-container">
+            <button class="filter-btn active" onclick="filterProjects('all')" data-lang="filter_all">All</button>
+            <button class="filter-btn" onclick="filterProjects('branding')" data-lang="filter_branding">Branding</button>
+            <button class="filter-btn" onclick="filterProjects('motion')" data-lang="filter_motion">Motion</button>
+            <button class="filter-btn" onclick="filterProjects('print')" data-lang="filter_print">Print</button>
+            <button class="filter-btn" onclick="filterProjects('social')" data-lang="filter_social">Social Media</button>
+        </div>
+
+        <div class="portfolio-grid">
+            
+            <div class="project-card" data-category="branding motion print" onclick="openModal('travis_dark')" onmouseenter="hoverVideo(this)" onmouseleave="unhoverVideo(this)">
+                <button class="card-like-btn" id="like-travis_dark" onclick="toggleLike(event, 'travis_dark')">
+                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </button>
+                <div class="card-media">
+                    <img src="Візитка_Тревіс.jpg" alt="Cover">
+                    <video src="video.mp4" muted loop playsinline></video>
+                </div>
+                <div class="card-info">
+                    <h3>Travis Scott - Utopia</h3>
+                    <p>Branding / Motion</p>
+                </div>
+            </div>
+
+            <div class="project-card" data-category="print graphic" onclick="openModal('travis_yellow')" onmouseenter="hoverVideo(this)" onmouseleave="unhoverVideo(this)">
+                <button class="card-like-btn" id="like-travis_yellow" onclick="toggleLike(event, 'travis_yellow')">
+                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </button>
+                <div class="card-media">
+                    <img src="Візитка_Тревіс1.jpg" alt="Cover">
+                    <video src="video1.mp4" muted loop playsinline></video>
+                </div>
+                <div class="card-info">
+                    <h3>Travis Scott - Yellow</h3>
+                    <p>Graphic Design / Print</p>
+                </div>
+            </div>
+
+            <div class="project-card" data-category="branding social" onclick="openModal('quicktalk')">
+                <button class="card-like-btn" id="like-quicktalk" onclick="toggleLike(event, 'quicktalk')">
+                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </button>
+                <div class="card-media">
+                    <img src="Meta square.jpg" alt="Cover">
+                </div>
+                <div class="card-info">
+                    <h3>QuickTalk Campaign</h3>
+                    <p>Social Media / Ads</p>
+                </div>
+            </div>
+            
+            <div class="project-card" data-category="print motion" onclick="openModal('architect')" onmouseenter="hoverVideo(this)" onmouseleave="unhoverVideo(this)">
+                <button class="card-like-btn" id="like-architect" onclick="toggleLike(event, 'architect')">
+                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </button>
+                <div class="card-media">
+                    <img src="Architect.jpg" alt="Cover">
+                    <video src="grok-video-430053b9-6ab6-4acf-8154-9038b84ab03c.mp4" muted loop playsinline></video>
+                </div>
+                <div class="card-info">
+                    <h3>Architect of Yourself</h3>
+                    <p>Poster / Motion Art</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="about" class="section-content">
+        <div class="about-container">
+            <h2 data-lang="about_title">Visual & Digital Creator</h2>
+            <div class="about-text">
+                <p data-lang="about_text1">Hi. My name is Ponomarenko. I create visual meanings and digital content.</p>
+                <p data-lang="about_text2">My approach combines aggressive aesthetics, modern motion design, and clean web interfaces.</p>
+                <br>
+                <p style="color: #888;">CONTACT:<br>email@example.com<br>@telegram_alias</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="projectModal">
+        <div class="modal-container">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            
+            <div class="modal-left">
+                <video id="modalVideo" class="hidden-media" muted autoplay loop playsinline></video>
+                <img id="modalImage" src="" alt="Project Image">
+                
+                <button class="slider-btn prev" onclick="changeSlide(-1)">
+                    <svg viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+                </button>
+                <button class="slider-btn next" onclick="changeSlide(1)">
+                    <svg viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                </button>
+
+                <div class="media-controls">
+                    <button class="media-btn active" onclick="switchMedia('image')" id="btnImage">GALLERY</button>
+                    <button class="media-btn" onclick="switchMedia('video')" id="btnVideo">VIDEO</button>
+                </div>
+            </div>
+
+            <div class="modal-right">
+                <div class="modal-header-row">
+                    <h1 class="modal-title" id="modalTitle">Title</h1>
+                </div>
+                <div class="modal-desc" id="modalDesc">Desc</div>
+                <div class="modal-tags" id="modalTags"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="fullscreenOverlay" onclick="closeFullscreen()">
+        <button class="fullscreen-close">&times;</button>
+        <img id="fullscreenImage" src="" alt="Fullscreen View">
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
