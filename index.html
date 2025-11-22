@@ -162,6 +162,13 @@
         <button class="fullscreen-close">&times;</button>
         <img id="fullscreenImage" src="" alt="Fullscreen View">
     </div>
+    
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+      // Робимо ці функції доступними для нашого script.js
+      window.firebaseModules = { initializeApp, getDatabase, ref, onValue, runTransaction };
+    </script>
 
     <script src="script.js"></script>
 </body>

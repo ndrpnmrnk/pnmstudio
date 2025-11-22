@@ -1,3 +1,81 @@
+/* --- 1. НАЛАШТУВАННЯ FIREBASE (Твої реальні ключі) --- */
+const firebaseConfig = {
+    apiKey: "AIzaSyD2TABFrvGoQ0tYv_epEFEyonb9wVE8W0s",
+    authDomain: "pnm-portfolio.firebaseapp.com",
+    databaseURL: "https://pnm-portfolio-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "pnm-portfolio",
+    storageBucket: "pnm-portfolio.firebasestorage.app",
+    messagingSenderId: "715058946560",
+    appId: "1:715058946560:web:106b588a826225d7596ee5",
+    measurementId: "G-NWGWP9KXTY"
+};
+
+// Ініціалізація бази даних
+let db;
+window.addEventListener('load', async () => {
+    // Чекаємо, поки завантажиться модуль з index.html
+    if(window.firebaseModules) {
+        const { initializeApp, getDatabase, ref, onValue, runTransaction } = window.firebaseModules;
+        const app = initializeApp(firebaseConfig);
+        db = getDatabase(app);
+        
+        // Запускаємо прослуховування лайків для всіх проектів
+        Object.keys(projects).forEach(id => listenForLikes(id));
+    } else {
+        console.error("Firebase модулі не завантажились. Перевір index.html");
+    }
+});
+
+/* --- 3. ЛОГІКА ЛАЙКІВ (ГЛОБАЛЬНА) --- */
+let myLikes = JSON.parse(localStorage.getItem('myLikes')) || {};
+
+// Фарбуємо сердечка, які ТИ вже натиснув
+function initMyLikes() {
+    for (const id in myLikes) {
+        const btn = document.getElementById(`like-${id}`);
+        if (btn) btn.classList.add('liked');
+    }
+}
+// Запускаємо після завантаження сторінки
+window.addEventListener('load', initMyLikes);
+
+// Клік по лайку
+function toggleLike(event, projectId) {
+    event.stopPropagation();
+    if (!db) return; // Чекаємо підключення
+
+    const btn = document.getElementById(`like-${projectId}`);
+    const { ref, runTransaction } = window.firebaseModules;
+    const projectRef = ref(db, 'likes/' + projectId);
+
+    if (myLikes[projectId]) {
+        // Прибираємо лайк
+        delete myLikes[projectId];
+        btn.classList.remove('liked');
+        runTransaction(projectRef, (currentLikes) => (currentLikes || 0) - 1);
+    } else {
+        // Ставимо лайк
+        myLikes[projectId] = true;
+        btn.classList.add('liked');
+        runTransaction(projectRef, (currentLikes) => (currentLikes || 0) + 1);
+    }
+    localStorage.setItem('myLikes', JSON.stringify(myLikes));
+}
+
+// Слухаємо зміни в базі (щоб оновити цифру)
+function listenForLikes(projectId) {
+    const { ref, onValue } = window.firebaseModules;
+    // Шукаємо span для цифри (тобі треба буде додати його в HTML, якщо ще немає)
+    // Але поки код працюватиме і без відображення цифри, просто зберігатиме в базу.
+    const countSpan = document.getElementById(`count-${projectId}`);
+    
+    const projectRef = ref(db, 'likes/' + projectId);
+    onValue(projectRef, (snapshot) => {
+        const data = snapshot.val() || 0;
+        if(countSpan) countSpan.innerText = data;
+    });
+}
+
 /* --- 1. СЛОВНИК ПЕРЕКЛАДІВ --- */
 const translations = {
     en: {
