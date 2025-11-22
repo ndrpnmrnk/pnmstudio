@@ -416,3 +416,24 @@ input:checked + .slider:before {
 .about-container { max-width: 800px; margin: 0 auto; line-height: 1.8; }
 .about-container h2 { font-size: 2.5rem; margin-bottom: 1rem; }
 .about-text { font-size: 1.1rem; color: #ccc; }
+
+/* --- ЛІЧИЛЬНИК ЛАЙКІВ --- */
+.like-count {
+    position: absolute;
+    top: 23px; /* Вирівнювання по висоті з кнопкою */
+    right: 60px; /* Зліва від кнопки (кнопка має width 35px + відступ 15px) */
+    z-index: 10;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8); /* Тінь, щоб читалося на будь-якому фоні */
+    opacity: 1; /* Завжди видно */
+    pointer-events: none; /* Щоб не заважало клікам */
+    transition: transform 0.2s;
+}
+
+/* Анімація при зміні (опціонально) */
+.like-count.updated {
+    transform: scale(1.2);
+    color: #e91e63;
+}

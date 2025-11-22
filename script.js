@@ -1,4 +1,4 @@
-/* --- 1. НАЛАШТУВАННЯ FIREBASE (Твої реальні ключі) --- */
+/* --- 1. НАЛАШТУВАННЯ FIREBASE --- */
 const firebaseConfig = {
     apiKey: "AIzaSyD2TABFrvGoQ0tYv_epEFEyonb9wVE8W0s",
     authDomain: "pnm-portfolio.firebaseapp.com",
@@ -10,107 +10,25 @@ const firebaseConfig = {
     measurementId: "G-NWGWP9KXTY"
 };
 
-// Ініціалізація бази даних
 let db;
+let firebaseModulesRef; // Зберігаємо посилання на модулі
+
+// Ініціалізація
 window.addEventListener('load', async () => {
-    // Чекаємо, поки завантажиться модуль з index.html
     if(window.firebaseModules) {
-        const { initializeApp, getDatabase, ref, onValue, runTransaction } = window.firebaseModules;
+        firebaseModulesRef = window.firebaseModules;
+        const { initializeApp, getDatabase } = firebaseModulesRef;
         const app = initializeApp(firebaseConfig);
         db = getDatabase(app);
         
-        // Запускаємо прослуховування лайків для всіх проектів
+        // Запускаємо прослуховування для ВСІХ проектів
         Object.keys(projects).forEach(id => listenForLikes(id));
     } else {
-        console.error("Firebase модулі не завантажились. Перевір index.html");
+        console.error("Firebase modules not loaded.");
     }
 });
 
-/* --- 3. ЛОГІКА ЛАЙКІВ (ГЛОБАЛЬНА) --- */
-let myLikes = JSON.parse(localStorage.getItem('myLikes')) || {};
-
-// Фарбуємо сердечка, які ТИ вже натиснув
-function initMyLikes() {
-    for (const id in myLikes) {
-        const btn = document.getElementById(`like-${id}`);
-        if (btn) btn.classList.add('liked');
-    }
-}
-// Запускаємо після завантаження сторінки
-window.addEventListener('load', initMyLikes);
-
-// Клік по лайку
-function toggleLike(event, projectId) {
-    event.stopPropagation();
-    if (!db) return; // Чекаємо підключення
-
-    const btn = document.getElementById(`like-${projectId}`);
-    const { ref, runTransaction } = window.firebaseModules;
-    const projectRef = ref(db, 'likes/' + projectId);
-
-    if (myLikes[projectId]) {
-        // Прибираємо лайк
-        delete myLikes[projectId];
-        btn.classList.remove('liked');
-        runTransaction(projectRef, (currentLikes) => (currentLikes || 0) - 1);
-    } else {
-        // Ставимо лайк
-        myLikes[projectId] = true;
-        btn.classList.add('liked');
-        runTransaction(projectRef, (currentLikes) => (currentLikes || 0) + 1);
-    }
-    localStorage.setItem('myLikes', JSON.stringify(myLikes));
-}
-
-// Слухаємо зміни в базі (щоб оновити цифру)
-function listenForLikes(projectId) {
-    const { ref, onValue } = window.firebaseModules;
-    // Шукаємо span для цифри (тобі треба буде додати його в HTML, якщо ще немає)
-    // Але поки код працюватиме і без відображення цифри, просто зберігатиме в базу.
-    const countSpan = document.getElementById(`count-${projectId}`);
-    
-    const projectRef = ref(db, 'likes/' + projectId);
-    onValue(projectRef, (snapshot) => {
-        const data = snapshot.val() || 0;
-        if(countSpan) countSpan.innerText = data;
-    });
-}
-
-/* --- 1. СЛОВНИК ПЕРЕКЛАДІВ --- */
-const translations = {
-    en: {
-        location: "UKRAINE, 2025",
-        tab_works: "WORKS",
-        tab_about: "ABOUT ME",
-        about_title: "Visual & Digital Creator",
-        about_text1: "Hi. My name is Ponomarenko. I create visual meanings and digital content.",
-        about_text2: "My approach combines aggressive aesthetics, modern motion design, and clean web interfaces.",
-        filter_all: "All",
-        filter_branding: "Branding",
-        filter_motion: "Motion",
-        filter_print: "Print",
-        filter_social: "Social Media",
-        btn_open: "OPEN PORTFOLIO"
-    },
-    ua: {
-        location: "УКРАЇНА, 2025",
-        tab_works: "РОБОТИ",
-        tab_about: "ПРО МЕНЕ",
-        about_title: "Візуальний та цифровий кріейтор",
-        about_text1: "Привіт. Мене звати Пономаренко. Я створюю візуальні сенси та цифровий контент.",
-        about_text2: "Мій підхід поєднує агресивну естетику, сучасний моушн-дизайн та чистоту веб-інтерфейсів.",
-        filter_all: "Всі",
-        filter_branding: "Брендинг",
-        filter_motion: "Моушн",
-        filter_print: "Друк",
-        filter_social: "Соцмережі",
-        btn_open: "ВІДКРИТИ ПОРТФОЛІО"
-    }
-};
-
-let currentLang = 'en';
-
-/* --- 2. БАЗА ДАНИХ --- */
+/* --- 2. БАЗА ДАНИХ ПРОЕКТІВ --- */
 const projects = {
     'travis_dark': {
         type: 'video',
@@ -159,7 +77,6 @@ const projects = {
     'mirror_shop': {
         type: 'image',
         videoSrc: "",
-        // Переконайся, що імена файлів точні (JPG vs jpg має значення на сервері!)
         gallery: ["SMMMirror.jpg", "ДзеркалаСММ1.jpg", "ДзеркалаСММ2.jpg", "ДзеркалаСММ3.jpg", "ДзеркалаСММ4.jpg", "ДзеркалаСММ5.jpg", "ДзеркалаСММ6.jpg", "ДзеркалаСММ7.jpg", "ДзеркалаСММ8.jpg", "ДзеркалаСММ9.jpg"], 
         content: {
             en: {
@@ -176,66 +93,125 @@ const projects = {
     }
 };
 
-/* --- ФУНКЦІЇ КЕРУВАННЯ --- */
+/* --- 3. ЛОГІКА ЛАЙКІВ (ОНОВЛЕНА) --- */
+let myLikes = JSON.parse(localStorage.getItem('myLikes')) || {};
 
-// 1. КНОПКА ЛОГО (ДОДОМУ)
+// Ініціалізація "моїх" червоних сердечок
+function initMyLikes() {
+    for (const id in myLikes) {
+        const btn = document.getElementById(`like-${id}`);
+        if (btn) btn.classList.add('liked');
+    }
+}
+window.addEventListener('load', initMyLikes);
+
+// Клік по лайку
+function toggleLike(event, projectId) {
+    event.stopPropagation();
+    
+    // Якщо база не завантажилась, нічого не робимо (можна додати alert)
+    if (!db || !firebaseModulesRef) return; 
+
+    const btn = document.getElementById(`like-${projectId}`);
+    const { ref, runTransaction } = firebaseModulesRef;
+    const projectRef = ref(db, 'likes/' + projectId);
+
+    if (myLikes[projectId]) {
+        // Видаляємо лайк
+        delete myLikes[projectId];
+        btn.classList.remove('liked');
+        // Мінус 1 в базі
+        runTransaction(projectRef, (currentLikes) => (currentLikes || 0) - 1);
+    } else {
+        // Ставимо лайк
+        myLikes[projectId] = true;
+        btn.classList.add('liked');
+        // Плюс 1 в базі
+        runTransaction(projectRef, (currentLikes) => (currentLikes || 0) + 1);
+    }
+    localStorage.setItem('myLikes', JSON.stringify(myLikes));
+}
+
+// Функція, яка слухає базу і оновлює цифру на екрані
+function listenForLikes(projectId) {
+    if (!db || !firebaseModulesRef) return;
+
+    const { ref, onValue } = firebaseModulesRef;
+    const countSpan = document.getElementById(`count-${projectId}`);
+    
+    if(countSpan) {
+        const projectRef = ref(db, 'likes/' + projectId);
+        
+        // Цей код спрацьовує щоразу, коли хтось у світі ставить лайк
+        onValue(projectRef, (snapshot) => {
+            const data = snapshot.val() || 0;
+            countSpan.innerText = data;
+            
+            // Маленька анімація
+            countSpan.classList.add('updated');
+            setTimeout(() => countSpan.classList.remove('updated'), 300);
+        });
+    }
+}
+
+/* --- 4. ПЕРЕКЛАДИ ТА UI --- */
+const translations = {
+    en: {
+        location: "UKRAINE, 2025",
+        tab_works: "WORKS",
+        tab_about: "ABOUT ME",
+        about_title: "Visual & Digital Creator",
+        about_text1: "Hi. My name is Ponomarenko. I create visual meanings and digital content.",
+        about_text2: "My approach combines aggressive aesthetics, modern motion design, and clean web interfaces.",
+        filter_all: "All",
+        filter_branding: "Branding",
+        filter_motion: "Motion",
+        filter_print: "Print",
+        filter_social: "Social Media",
+        btn_open: "OPEN PORTFOLIO"
+    },
+    ua: {
+        location: "УКРАЇНА, 2025",
+        tab_works: "РОБОТИ",
+        tab_about: "ПРО МЕНЕ",
+        about_title: "Візуальний та цифровий кріейтор",
+        about_text1: "Привіт. Мене звати Пономаренко. Я створюю візуальні сенси та цифровий контент.",
+        about_text2: "Мій підхід поєднує агресивну естетику, сучасний моушн-дизайн та чистоту веб-інтерфейсів.",
+        filter_all: "Всі",
+        filter_branding: "Брендинг",
+        filter_motion: "Моушн",
+        filter_print: "Друк",
+        filter_social: "Соцмережі",
+        btn_open: "ВІДКРИТИ ПОРТФОЛІО"
+    }
+};
+
+let currentLang = 'en';
+
+function setLanguage(lang) {
+    currentLang = lang;
+    const checkbox = document.getElementById('languageToggle');
+    if (lang === 'ua') checkbox.checked = true;
+    else checkbox.checked = false;
+
+    document.querySelectorAll('[data-lang]').forEach(el => {
+        const key = el.getAttribute('data-lang');
+        if (translations[lang][key]) el.innerText = translations[lang][key];
+    });
+    if(currentProjectId) updateModalText(currentProjectId);
+}
+
+function toggleLanguage() {
+    const checkbox = document.getElementById('languageToggle');
+    if (checkbox.checked) setLanguage('ua');
+    else setLanguage('en');
+}
+
 function goHome() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     openTab('projects', document.querySelector('.tab-btn'));
 }
 
-// 2. ПЕРЕМИКАЧ МОВИ (ТУМБЛЕР)
-function toggleLanguage() {
-    const checkbox = document.getElementById('languageToggle');
-    if (checkbox.checked) {
-        setLanguage('ua');
-    } else {
-        setLanguage('en');
-    }
-}
-
-function setLanguage(lang) {
-    currentLang = lang;
-    
-    // Оновлюємо стан тумблера (якщо функція викликана не через клік)
-    const checkbox = document.getElementById('languageToggle');
-    if (lang === 'ua') checkbox.checked = true;
-    else checkbox.checked = false;
-
-    // Переклад текстів
-    document.querySelectorAll('[data-lang]').forEach(el => {
-        const key = el.getAttribute('data-lang');
-        if (translations[lang][key]) el.innerText = translations[lang][key];
-    });
-    
-    if(currentProjectId) updateModalText(currentProjectId);
-}
-
-/* --- ЛАЙКИ --- */
-let likedProjects = JSON.parse(localStorage.getItem('likedProjects')) || {};
-
-function toggleLike(event, projectId) {
-    event.stopPropagation();
-    const btn = document.getElementById(`like-${projectId}`);
-    if (likedProjects[projectId]) {
-        delete likedProjects[projectId];
-        btn.classList.remove('liked');
-    } else {
-        likedProjects[projectId] = true;
-        btn.classList.add('liked');
-    }
-    localStorage.setItem('likedProjects', JSON.stringify(likedProjects));
-}
-
-function initLikes() {
-    for (const id in likedProjects) {
-        const btn = document.getElementById(`like-${id}`);
-        if (btn) btn.classList.add('liked');
-    }
-}
-initLikes();
-
-/* --- ФІЛЬТРИ --- */
 function filterProjects(category) {
     document.querySelectorAll('.filter-btn').forEach(btn => {
         if(btn.getAttribute('onclick').includes(category)) btn.classList.add('active');
@@ -253,7 +229,6 @@ function filterProjects(category) {
     });
 }
 
-/* --- UI --- */
 function openTab(tabName, btnElement) {
     document.querySelectorAll('.section-content').forEach(sec => sec.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -281,7 +256,7 @@ let currentProjectId = null;
 function openModal(id) {
     const data = projects[id];
     if(!data) {
-        console.error("Project not found: " + id); // Додав вивід помилки в консоль
+        console.error("Project not found: " + id);
         return;
     }
     currentProjectId = id;
