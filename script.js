@@ -78,6 +78,25 @@ const projects = {
             }
         }
     },
+    
+    'mirror_shop': {
+        type: 'image',
+        videoSrc: "",
+        // Сюди ти потім допишеш нові файли через кому, наприклад: ["SMMMirror.jpg", "post1.jpg", "post2.jpg"]
+        gallery: ["SMMMirror.jpg", "ДзеркалаСММ1.jpg", "ДзеркалаСММ2.jpg", "ДзеркалаСММ3.jpg", "ДзеркалаСММ4.jpg", "ДзеркалаСММ5.jpg", "ДзеркалаСММ6.jpg", "ДзеркалаСММ7.jpg", "ДзеркалаСММ8.jpg", "ДзеркалаСММ9.jpg"], 
+        content: {
+            en: {
+                title: "Mirror Shop Visuals",
+                description: "Visual identity and content creation for a mirror store. Developing a grid layout, highlights, and informative posts (benefits, before/after, technical specs).",
+                tags: ["SMM", "Graphic Design", "Content Creation"]
+            },
+            ua: {
+                title: "Візуал для магазину дзеркал",
+                description: "Розробка візуального стилю для Instagram магазину дзеркал. Створення сітки, обкладинок та інформативних постів (переваги, до/після, технічні характеристики).",
+                tags: ["SMM", "Графічний дизайн", "Контент"]
+            }
+        }
+    },
 };
 
 /* --- ЛАЙКИ (LOCAL STORAGE) --- */
