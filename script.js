@@ -98,7 +98,42 @@ const projects = {
     }
 };
 
-/* --- ЛАЙКИ (LOCAL STORAGE) --- */
+/* --- ФУНКЦІЇ КЕРУВАННЯ --- */
+
+// 1. КНОПКА ЛОГО (ДОДОМУ)
+function goHome() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    openTab('projects', document.querySelector('.tab-btn'));
+}
+
+// 2. ПЕРЕМИКАЧ МОВИ (ТУМБЛЕР)
+function toggleLanguage() {
+    const checkbox = document.getElementById('languageToggle');
+    if (checkbox.checked) {
+        setLanguage('ua');
+    } else {
+        setLanguage('en');
+    }
+}
+
+function setLanguage(lang) {
+    currentLang = lang;
+    
+    // Оновлюємо стан тумблера (якщо функція викликана не через клік)
+    const checkbox = document.getElementById('languageToggle');
+    if (lang === 'ua') checkbox.checked = true;
+    else checkbox.checked = false;
+
+    // Переклад текстів
+    document.querySelectorAll('[data-lang]').forEach(el => {
+        const key = el.getAttribute('data-lang');
+        if (translations[lang][key]) el.innerText = translations[lang][key];
+    });
+    
+    if(currentProjectId) updateModalText(currentProjectId);
+}
+
+/* --- ЛАЙКИ --- */
 let likedProjects = JSON.parse(localStorage.getItem('likedProjects')) || {};
 
 function toggleLike(event, projectId) {
@@ -121,18 +156,6 @@ function initLikes() {
     }
 }
 initLikes();
-
-/* --- МОВА --- */
-function setLanguage(lang) {
-    currentLang = lang;
-    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`.lang-btn[onclick="setLanguage('${lang}')"]`).classList.add('active');
-    document.querySelectorAll('[data-lang]').forEach(el => {
-        const key = el.getAttribute('data-lang');
-        if (translations[lang][key]) el.innerText = translations[lang][key];
-    });
-    if(currentProjectId) updateModalText(currentProjectId);
-}
 
 /* --- ФІЛЬТРИ --- */
 function filterProjects(category) {
