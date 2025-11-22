@@ -78,25 +78,24 @@ const projects = {
             }
         }
     },
-    
     'mirror_shop': {
         type: 'image',
         videoSrc: "",
-        // Сюди ти потім допишеш нові файли через кому, наприклад: ["SMMMirror.jpg", "post1.jpg", "post2.jpg"]
+        // Переконайся, що імена файлів точні (JPG vs jpg має значення на сервері!)
         gallery: ["SMMMirror.jpg", "ДзеркалаСММ1.jpg", "ДзеркалаСММ2.jpg", "ДзеркалаСММ3.jpg", "ДзеркалаСММ4.jpg", "ДзеркалаСММ5.jpg", "ДзеркалаСММ6.jpg", "ДзеркалаСММ7.jpg", "ДзеркалаСММ8.jpg", "ДзеркалаСММ9.jpg"], 
         content: {
             en: {
                 title: "Mirror Shop Visuals",
-                description: "Visual identity and content creation for a mirror store. Developing a grid layout, highlights, and informative posts (benefits, before/after, technical specs).",
+                description: "Visual identity and content creation for a mirror store. Developing a grid layout, highlights, and informative posts.",
                 tags: ["SMM", "Graphic Design", "Content Creation"]
             },
             ua: {
                 title: "Візуал для магазину дзеркал",
-                description: "Розробка візуального стилю для Instagram магазину дзеркал. Створення сітки, обкладинок та інформативних постів (переваги, до/після, технічні характеристики).",
+                description: "Розробка візуального стилю для Instagram магазину дзеркал. Створення сітки, обкладинок та інформативних постів.",
                 tags: ["SMM", "Графічний дизайн", "Контент"]
             }
         }
-    },
+    }
 };
 
 /* --- ЛАЙКИ (LOCAL STORAGE) --- */
@@ -180,7 +179,10 @@ let currentProjectId = null;
 
 function openModal(id) {
     const data = projects[id];
-    if(!data) return;
+    if(!data) {
+        console.error("Project not found: " + id); // Додав вивід помилки в консоль
+        return;
+    }
     currentProjectId = id;
     currentGallery = data.gallery || [];
     currentSlideIndex = 0;
@@ -204,7 +206,6 @@ function openModal(id) {
 function updateModalText(id) {
     const data = projects[id];
     const text = data.content[currentLang];
-    
     mTitle.innerText = text.title;
     mDesc.innerText = text.description;
     mTags.innerHTML = '';
