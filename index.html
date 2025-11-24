@@ -8,10 +8,17 @@
 </head>
 <body>
 
+    <div class="ambient-background" id="ambient-bg"></div>
+
     <header>
         <div class="header-left">
             <div class="logo" onclick="goHome()">pnm_studio</div>
         </div>
+
+        <nav class="header-nav" id="headerNav">
+            <button onclick="scrollToTab('projects')" data-lang="tab_works">WORKS</button>
+            <button onclick="scrollToTab('about')" data-lang="tab_about">ABOUT</button>
+        </nav>
 
         <div class="lang-toggle-wrapper">
             <span class="lang-label">EN</span>
@@ -27,117 +34,154 @@
         <img src="БанерПортфолио.jpg" alt="Ponomarenko Art Banner">
     </div>
 
+    <div class="showreel-wrapper">
+        <div class="showreel-container">
+            <video src="showreel.mp4" autoplay muted loop playsinline></video>
+            <div class="showreel-overlay">
+                <span>SHOWREEL 2025</span>
+            </div>
+        </div>
+    </div>
+
     <div class="tabs-container">
         <button class="tab-btn active" onclick="openTab('projects', this)" data-lang="tab_works">WORKS</button>
         <button class="tab-btn" onclick="openTab('about', this)" data-lang="tab_about">ABOUT</button>
     </div>
 
     <div id="projects" class="section-content active">
-        
         <div class="filter-container">
             <button class="filter-btn active" onclick="filterProjects('all')" data-lang="filter_all">All</button>
-            <button class="filter-btn" onclick="filterProjects('branding')" data-lang="filter_branding">Branding</button>
-            <button class="filter-btn" onclick="filterProjects('motion')" data-lang="filter_motion">Motion</button>
+            <button class="filter-btn" onclick="filterProjects('smm')" data-lang="filter_smm">SMM</button>
+            <button class="filter-btn" onclick="filterProjects('video')" data-lang="filter_video">Video</button>
             <button class="filter-btn" onclick="filterProjects('print')" data-lang="filter_print">Print</button>
-            <button class="filter-btn" onclick="filterProjects('social')" data-lang="filter_social">Social Media</button>
+            <button class="filter-btn" onclick="filterProjects('poster')" data-lang="filter_poster">Poster</button>
+            <button class="filter-btn" onclick="filterProjects('branding')" data-lang="filter_branding">Branding</button>
         </div>
 
         <div class="portfolio-grid">
-            
-            <div class="project-card" data-category="branding motion print" onclick="openModal('travis_dark')" onmouseenter="hoverVideo(this)" onmouseleave="unhoverVideo(this)">
-                <button class="card-like-btn" id="like-travis_dark" onclick="toggleLike(event, 'travis_dark')">
-                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                </button>
-                
-                <span class="like-count" id="count-travis_dark">0</span>
-                
+             <div class="project-card" data-category="branding motion print" onclick="openModal('travis_dark')" onmouseenter="hoverVideo(this)" onmouseleave="unhoverVideo(this)">
+                <div class="like-wrapper" onclick="toggleLike(event, 'travis_dark')">
+                    <span class="like-count" id="count-travis_dark">0</span>
+                    <button class="card-like-btn" id="like-travis_dark">
+                        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </button>
+                </div>
                 <div class="card-media">
                     <img src="Візитка_Тревіс.jpg" alt="Cover">
                     <video src="video.mp4" muted loop playsinline></video>
                 </div>
                 <div class="card-info">
                     <h3>Travis Scott - Utopia</h3>
-                    <p>Branding / Motion</p>
+                    <p>Print / Branding</p>
                 </div>
             </div>
-
             <div class="project-card" data-category="print graphic" onclick="openModal('travis_yellow')" onmouseenter="hoverVideo(this)" onmouseleave="unhoverVideo(this)">
-                <button class="card-like-btn" id="like-travis_yellow" onclick="toggleLike(event, 'travis_yellow')">
-                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                </button>
-                
-                <span class="like-count" id="count-travis_yellow">0</span>
-                
+                <div class="like-wrapper" onclick="toggleLike(event, 'travis_yellow')">
+                    <span class="like-count" id="count-travis_yellow">0</span>
+                    <button class="card-like-btn" id="like-travis_yellow">
+                        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </button>
+                </div>
                 <div class="card-media">
                     <img src="Візитка_Тревіс1.jpg" alt="Cover">
                     <video src="video1.mp4" muted loop playsinline></video>
                 </div>
                 <div class="card-info">
                     <h3>Travis Scott - Yellow</h3>
-                    <p>Graphic Design / Print</p>
+                    <p>Print / Branding</p>
                 </div>
             </div>
 
-            <div class="project-card" data-category="branding social" onclick="openModal('quicktalk')">
-                <button class="card-like-btn" id="like-quicktalk" onclick="toggleLike(event, 'quicktalk')">
-                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                </button>
-                
-                <span class="like-count" id="count-quicktalk">0</span>
-                
+            <div class="project-card" data-category="smm branding" onclick="openModal('quicktalk')">
+                <div class="like-wrapper" onclick="toggleLike(event, 'quicktalk')">
+                    <span class="like-count" id="count-quicktalk">0</span>
+                    <button class="card-like-btn" id="like-quicktalk">
+                        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </button>
+                </div>
                 <div class="card-media">
                     <img src="Meta square.jpg" alt="Cover">
                 </div>
                 <div class="card-info">
                     <h3>QuickTalk Campaign</h3>
-                    <p>Social Media / Ads</p>
+                    <p>SMM / Ads</p>
                 </div>
             </div>
             
-            <div class="project-card tall" data-category="print motion" onclick="openModal('architect')" onmouseenter="hoverVideo(this)" onmouseleave="unhoverVideo(this)">
-                <button class="card-like-btn" id="like-architect" onclick="toggleLike(event, 'architect')">
-                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                </button>
-                
-                <span class="like-count" id="count-architect">0</span>
-                
+            <div class="project-card tall" data-category="poster" onclick="openModal('architect')" onmouseenter="hoverVideo(this)" onmouseleave="unhoverVideo(this)">
+                <div class="like-wrapper" onclick="toggleLike(event, 'architect')">
+                    <span class="like-count" id="count-architect">0</span>
+                    <button class="card-like-btn" id="like-architect">
+                        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </button>
+                </div>
                 <div class="card-media">
                     <img src="Architect.jpg" alt="Cover">
                     <video src="grok-video-430053b9-6ab6-4acf-8154-9038b84ab03c.mp4" muted loop playsinline></video>
                 </div>
                 <div class="card-info">
                     <h3>Architect of Yourself</h3>
-                    <p>Poster / Motion Art</p>
+                    <p>Poster / Video Art</p>
                 </div>
             </div>
             
-            <div class="project-card" data-category="branding social" onclick="openModal('mirror_shop')">
-                <button class="card-like-btn" id="like-mirror_shop" onclick="toggleLike(event, 'mirror_shop')">
-                    <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-                </button>
-                
-                <span class="like-count" id="count-mirror_shop">0</span>
-                
+            <div class="project-card" data-category="smm branding" onclick="openModal('mirror_shop')">
+                <div class="like-wrapper" onclick="toggleLike(event, 'mirror_shop')">
+                    <span class="like-count" id="count-mirror_shop">0</span>
+                    <button class="card-like-btn" id="like-mirror_shop">
+                        <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    </button>
+                </div>
                 <div class="card-media">
                     <img src="SMMMirror.jpg" alt="Mirror Shop SMM">
                 </div>
                 <div class="card-info">
                     <h3>Mirror Shop Visuals</h3>
-                    <p>SMM / Graphic Design</p>
+                    <p>SMM / Branding</p>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <div id="about" class="section-content">
+ <div id="about" class="section-content">
         <div class="about-container">
-            <h2 data-lang="about_title">Visual & Digital Creator</h2>
+            <h2 class="about-title" data-lang="about_title">Graphic & Visual Designer</h2>
+            
             <div class="about-text">
-                <p data-lang="about_text1">Hi. My name is Ponomarenko. I create visual meanings and digital content.</p>
-                <p data-lang="about_text2">My approach combines aggressive aesthetics, modern motion design, and clean web interfaces.</p>
-                <br>
-                <p style="color: #888;">CONTACT:<br>email@example.com<br>@telegram_alias</p>
+                <p data-lang="about_text1">Hi! My name is Andrii Ponomarenko, I am a graphic designer.</p>
+                <p data-lang="about_text2">I understand trends in design and video editing. I actively work with AI, using it to create unique visual solutions.</p>
+                <p data-lang="about_text3">Thanks to my attention to detail and constant desire to develop, I strive to make every project unforgettable and satisfy expectations 100%.</p>
+            </div>
+
+            <div class="skills-section">
+                <h3 data-lang="skills_title">EXPERIENCE & TOOLS</h3>
+                <div class="skills-grid">
+                    <span class="skill-tag">Graphic Design</span>
+                    <span class="skill-tag">Video Editing</span>
+                    <span class="skill-tag">Social Media (Reels/Stories)</span>
+                    <span class="skill-tag">Infographics</span>
+                    <span class="skill-tag">AI Generation</span>
+                    <span class="skill-tag">Adobe Photoshop</span>
+                    <span class="skill-tag">Adobe Illustrator</span>
+                    <span class="skill-tag">Premiere Pro</span>
+                    <span class="skill-tag">Figma</span>
+                    <span class="skill-tag">Canva</span>
+                </div>
+            </div>
+
+            <div class="social-links">
+                <a href="#" target="_blank" class="glass-btn">
+                    <svg viewBox="0 0 24 24"><path d="M22 9.125c0-.7-.125-1.375-.375-2.025-.25-.65-.6-1.225-1.05-1.725s-.975-.9-1.575-1.2c-.6-.3-1.275-.45-2.025-.45h-9.5v16.5h9.5c.75 0 1.425-.15 2.025-.45s1.125-.7 1.575-1.2c.45-.5.8-1.075 1.05-1.725.25-.65.375-1.325.375-2.025 0-.7-.125-1.375-.375-2.025-.25-.65-.6-1.225-1.05-1.725-1.225-1.35-3.075-2.025-5.55-2.025h-1.5v-4.5h1.5c2.475 0 4.325-.675 5.55-2.025.45-.5.8-1.075 1.05-1.725.25-.65.375-1.325.375-2.025zM7.5 18.375h-3v-12.75h3v12.75z"/></svg>
+                    <span>Behance</span>
+                </a>
+                <a href="#" target="_blank" class="glass-btn">
+                    <svg viewBox="0 0 24 24"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm0 19c-1.105 0-2-.895-2-2s.895-2 2-2 2 .895 2 2-.895 2-2 2zm.02-6c-1.103 0-2-.897-2-2s.897-2 2-2 2 .897 2 2-.897 2-2 2z"/></svg>
+                    <span>Telegram</span>
+                </a>
+                <a href="#" target="_blank" class="glass-btn">
+                    <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    <span>Instagram</span>
+                </a>
             </div>
         </div>
     </div>
@@ -181,7 +225,6 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
       import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-      // Робимо ці функції доступними для нашого script.js
       window.firebaseModules = { initializeApp, getDatabase, ref, onValue, runTransaction };
     </script>
 

@@ -11,32 +11,29 @@ const firebaseConfig = {
 };
 
 let db;
-let firebaseModulesRef; // Зберігаємо посилання на модулі
+let firebaseModulesRef;
 
-// Ініціалізація
 window.addEventListener('load', async () => {
     if(window.firebaseModules) {
         firebaseModulesRef = window.firebaseModules;
         const { initializeApp, getDatabase } = firebaseModulesRef;
         const app = initializeApp(firebaseConfig);
         db = getDatabase(app);
-        
-        // Запускаємо прослуховування для ВСІХ проектів
         Object.keys(projects).forEach(id => listenForLikes(id));
     } else {
         console.error("Firebase modules not loaded.");
     }
 });
 
-/* --- 2. БАЗА ДАНИХ ПРОЕКТІВ --- */
+/* --- 2. БАЗА ДАНИХ ПРОЕКТІВ (ОНОВЛЕНІ ТЕГИ) --- */
 const projects = {
     'travis_dark': {
         type: 'video',
         videoSrc: "video.mp4",
         gallery: ["Візитка_Тревіс.jpg"],
         content: {
-            en: { title: "Travis Scott - Utopia Card", description: "Dark grunge aesthetic business card concept.", tags: ["Branding", "Motion", "Print"] },
-            ua: { title: "Візитка Travis Scott - Utopia", description: "Концепт візитки у темній гранж естетиці.", tags: ["Брендинг", "Моушн", "Друк"] }
+            en: { title: "Travis Scott - Utopia Card", description: "Dark grunge aesthetic business card concept.", tags: ["Branding", "Print"] },
+            ua: { title: "Візитка Travis Scott - Utopia", description: "Концепт візитки у темній гранж естетиці.", tags: ["Брендинг", "Друк"] }
         }
     },
     'travis_yellow': {
@@ -44,8 +41,8 @@ const projects = {
         videoSrc: "video1.mp4",
         gallery: ["Візитка_Тревіс1.jpg"],
         content: {
-            en: { title: "Travis Scott - Yellow Edition", description: "Alternative version focusing on typography.", tags: ["Graphic Design", "Print", "Typography"] },
-            ua: { title: "Візитка Travis Scott - Yellow", description: "Альтернативна версія з акцентом на типографіку.", tags: ["Графічний дизайн", "Друк", "Типографія"] }
+            en: { title: "Travis Scott - Yellow Edition", description: "Alternative version focusing on typography.", tags: ["Branding", "Print", "Typography"] },
+            ua: { title: "Візитка Travis Scott - Yellow", description: "Альтернативна версія з акцентом на типографіку.", tags: ["Брендинг", "Друк", "Типографія"] }
         }
     },
     'quicktalk': {
@@ -53,8 +50,8 @@ const projects = {
         videoSrc: "",
         gallery: ["Meta square.jpg", "Google Display (Quality).jpg", "Meta landscape.jpg"],
         content: {
-            en: { title: "QuickTalk Campaign", description: "Advertising banners for English learning platform.", tags: ["Social Media", "Ads", "Graphic Design"] },
-            ua: { title: "Рекламна кампанія QuickTalk", description: "Рекламні банери для школи англійської мови.", tags: ["Соцмережі", "Реклама", "Графічний дизайн"] }
+            en: { title: "QuickTalk Campaign", description: "Advertising banners for English learning platform.", tags: ["SMM", "Branding", "Ads"] },
+            ua: { title: "Рекламна кампанія QuickTalk", description: "Рекламні банери для школи англійської мови.", tags: ["SMM", "Брендинг", "Реклама"] }
         }
     },
     'architect': {
@@ -62,16 +59,8 @@ const projects = {
         videoSrc: "grok-video-430053b9-6ab6-4acf-8154-9038b84ab03c.mp4",
         gallery: ["Architect.jpg"],
         content: {
-            en: {
-                title: "Architect of Yourself",
-                description: "Motivational poster design combining classical sculpture with modern typography. The concept visualizes self-creation as a sculpting process: 'You are the architect of yourself'.",
-                tags: ["Print", "Motion", "Typography"]
-            },
-            ua: {
-                title: "Архітектор власного Я",
-                description: "Дизайн мотиваційного постера, що поєднує класичну скульптуру та сучасну типографіку. Концепція візуалізує самостворення як процес роботи скульптора.",
-                tags: ["Друк", "Моушн", "Типографія"]
-            }
+            en: { title: "Architect of Yourself", description: "Motivational poster design combining classical sculpture with modern typography.", tags: ["Poster", "Motion"] },
+            ua: { title: "Архітектор власного Я", description: "Дизайн мотиваційного постера, що поєднує класичну скульптуру та сучасну типографіку.", tags: ["Постер", "Моушн"] }
         }
     },
     'mirror_shop': {
@@ -79,24 +68,58 @@ const projects = {
         videoSrc: "",
         gallery: ["SMMMirror.jpg", "ДзеркалаСММ1.jpg", "ДзеркалаСММ2.jpg", "ДзеркалаСММ3.jpg", "ДзеркалаСММ4.jpg", "ДзеркалаСММ5.jpg", "ДзеркалаСММ6.jpg", "ДзеркалаСММ7.jpg", "ДзеркалаСММ8.jpg", "ДзеркалаСММ9.jpg"], 
         content: {
-            en: {
-                title: "Mirror Shop Visuals",
-                description: "Visual identity and content creation for a mirror store. Developing a grid layout, highlights, and informative posts.",
-                tags: ["SMM", "Graphic Design", "Content Creation"]
-            },
-            ua: {
-                title: "Візуал для магазину дзеркал",
-                description: "Розробка візуального стилю для Instagram магазину дзеркал. Створення сітки, обкладинок та інформативних постів.",
-                tags: ["SMM", "Графічний дизайн", "Контент"]
-            }
+            en: { title: "Mirror Shop Visuals", description: "Visual identity and content creation for a mirror store.", tags: ["SMM", "Branding", "Content"] },
+            ua: { title: "Візуал для магазину дзеркал", description: "Розробка візуального стилю для Instagram магазину дзеркал.", tags: ["SMM", "Брендинг", "Контент"] }
         }
     }
 };
 
-/* --- 3. ЛОГІКА ЛАЙКІВ (ОНОВЛЕНА) --- */
+/* --- 3. ПЕРЕКЛАДИ (ОНОВЛЕНІ ФІЛЬТРИ) --- */
+const translations = {
+    en: {
+        location: "UKRAINE, 2025",
+        tab_works: "WORKS",
+        tab_about: "ABOUT ME",
+        about_title: "Graphic & Visual Designer",
+        about_text1: "Hi! My name is Andrii Ponomarenko, I am a graphic designer.",
+        about_text2: "I understand trends in design and video editing. I actively work with AI, using it to create unique visual solutions.",
+        about_text3: "Thanks to my attention to detail and constant desire to develop, I strive to make every project unforgettable and satisfy expectations 100%.",
+        skills_title: "EXPERIENCE & TOOLS",
+        filter_all: "All",
+        filter_branding: "Branding",
+        filter_motion: "Motion",
+        filter_print: "Print",
+        filter_social: "Social Media",
+        filter_smm: "SMM",
+        filter_video: "Video",
+        filter_poster: "Poster",
+        btn_open: "OPEN PORTFOLIO"
+    },
+    ua: {
+        location: "УКРАЇНА, 2025",
+        tab_works: "РОБОТИ",
+        tab_about: "ПРО МЕНЕ",
+        about_title: "Графічний та Візуальний Дизайнер",
+        about_text1: "Привіт! Мене звуть Пономаренко Андрій, я графічний дизайнер.",
+        about_text2: "Розуміюся у трендах в дизайні та відео-монтажі. Активно працюю з АІ, використовуючи їх для створення унікальних візуальних рішень.",
+        about_text3: "Завдяки увазі до деталей і постійному бажанню розвиватися, я прагну зробити кожен проект незабутнім і таким, що задовольнятиме очікування на всі 100%.",
+        skills_title: "ДОСВІД ТА ІНСТРУМЕНТИ",
+        filter_all: "Всі",
+        filter_branding: "Брендинг",
+        filter_motion: "Моушн",
+        filter_print: "Друк",
+        filter_social: "Соцмережі",
+        filter_smm: "SMM",
+        filter_video: "Відео",
+        filter_poster: "Постер",
+        btn_open: "ВІДКРИТИ ПОРТФОЛІО"
+    }
+};
+
+/* --- РЕШТА ФУНКЦІЙ (БЕЗ ЗМІН) --- */
+let currentLang = 'en';
 let myLikes = JSON.parse(localStorage.getItem('myLikes')) || {};
 
-// Ініціалізація "моїх" червоних сердечок
 function initMyLikes() {
     for (const id in myLikes) {
         const btn = document.getElementById(`like-${id}`);
@@ -105,11 +128,8 @@ function initMyLikes() {
 }
 window.addEventListener('load', initMyLikes);
 
-// Клік по лайку
 function toggleLike(event, projectId) {
     event.stopPropagation();
-    
-    // Якщо база не завантажилась, нічого не робимо (можна додати alert)
     if (!db || !firebaseModulesRef) return; 
 
     const btn = document.getElementById(`like-${projectId}`);
@@ -117,76 +137,31 @@ function toggleLike(event, projectId) {
     const projectRef = ref(db, 'likes/' + projectId);
 
     if (myLikes[projectId]) {
-        // Видаляємо лайк
         delete myLikes[projectId];
         btn.classList.remove('liked');
-        // Мінус 1 в базі
         runTransaction(projectRef, (currentLikes) => (currentLikes || 0) - 1);
     } else {
-        // Ставимо лайк
         myLikes[projectId] = true;
         btn.classList.add('liked');
-        // Плюс 1 в базі
         runTransaction(projectRef, (currentLikes) => (currentLikes || 0) + 1);
     }
     localStorage.setItem('myLikes', JSON.stringify(myLikes));
 }
 
-// Функція, яка слухає базу і оновлює цифру на екрані
 function listenForLikes(projectId) {
     if (!db || !firebaseModulesRef) return;
-
     const { ref, onValue } = firebaseModulesRef;
     const countSpan = document.getElementById(`count-${projectId}`);
-    
     if(countSpan) {
         const projectRef = ref(db, 'likes/' + projectId);
-        
-        // Цей код спрацьовує щоразу, коли хтось у світі ставить лайк
         onValue(projectRef, (snapshot) => {
             const data = snapshot.val() || 0;
             countSpan.innerText = data;
-            
-            // Маленька анімація
             countSpan.classList.add('updated');
             setTimeout(() => countSpan.classList.remove('updated'), 300);
         });
     }
 }
-
-/* --- 4. ПЕРЕКЛАДИ ТА UI --- */
-const translations = {
-    en: {
-        location: "UKRAINE, 2025",
-        tab_works: "WORKS",
-        tab_about: "ABOUT ME",
-        about_title: "Visual & Digital Creator",
-        about_text1: "Hi. My name is Ponomarenko. I create visual meanings and digital content.",
-        about_text2: "My approach combines aggressive aesthetics, modern motion design, and clean web interfaces.",
-        filter_all: "All",
-        filter_branding: "Branding",
-        filter_motion: "Motion",
-        filter_print: "Print",
-        filter_social: "Social Media",
-        btn_open: "OPEN PORTFOLIO"
-    },
-    ua: {
-        location: "УКРАЇНА, 2025",
-        tab_works: "РОБОТИ",
-        tab_about: "ПРО МЕНЕ",
-        about_title: "Візуальний та цифровий кріейтор",
-        about_text1: "Привіт. Мене звати Пономаренко. Я створюю візуальні сенси та цифровий контент.",
-        about_text2: "Мій підхід поєднує агресивну естетику, сучасний моушн-дизайн та чистоту веб-інтерфейсів.",
-        filter_all: "Всі",
-        filter_branding: "Брендинг",
-        filter_motion: "Моушн",
-        filter_print: "Друк",
-        filter_social: "Соцмережі",
-        btn_open: "ВІДКРИТИ ПОРТФОЛІО"
-    }
-};
-
-let currentLang = 'en';
 
 function setLanguage(lang) {
     currentLang = lang;
@@ -239,7 +214,6 @@ function openTab(tabName, btnElement) {
 function hoverVideo(card) { const v = card.querySelector('video'); if(v) v.play(); }
 function unhoverVideo(card) { const v = card.querySelector('video'); if(v) { v.pause(); v.currentTime = 0; } }
 
-/* --- МОДАЛКА --- */
 const modal = document.getElementById('projectModal');
 const mVideo = document.getElementById('modalVideo');
 const mImage = document.getElementById('modalImage');
@@ -350,3 +324,81 @@ const fsOverlay = document.getElementById('fullscreenOverlay');
 const fsImage = document.getElementById('fullscreenImage');
 function openFullscreen(src) { fsImage.src = src; fsOverlay.classList.add('active'); }
 function closeFullscreen() { fsOverlay.classList.remove('active'); setTimeout(() => fsImage.src = "", 300); }
+
+/* --- ХЕДЕР НАВІГАЦІЯ (Зникнення при скролі) --- */
+
+// Функція скролу до блоків
+function scrollToTab(tabName) {
+    // 1. Перемикаємо таби знизу
+    const targetBtn = document.querySelector(`.tab-btn[onclick*="'${tabName}'"]`);
+    if(targetBtn) openTab(tabName, targetBtn);
+    
+    // 2. Скролимо до контенту
+    const tabsContainer = document.querySelector('.tabs-container');
+    // Розраховуємо позицію з урахуванням висоти хедера
+    const offset = 100; 
+    const bodyRect = document.body.getBoundingClientRect().top;
+    const elementRect = tabsContainer.getBoundingClientRect().top;
+    const elementPosition = elementRect - bodyRect;
+    const offsetPosition = elementPosition - offset;
+
+    window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+    });
+}
+
+// Логіка зникнення написів
+window.addEventListener('scroll', () => {
+    const headerNav = document.getElementById('headerNav');
+    const scrollPosition = window.scrollY;
+
+    // Якщо прокрутили більше 50px (вийшли з зони банера) -> ховаємо написи
+    if (scrollPosition > 50) {
+        headerNav.classList.add('hidden-nav');
+    } else {
+        // Якщо повернулися на самий верх -> показуємо написи
+        headerNav.classList.remove('hidden-nav');
+    }
+});
+
+/* --- ГЕНЕРАТОР ЖИВОГО ФОНУ --- */
+document.addEventListener('DOMContentLoaded', () => {
+    const bgContainer = document.getElementById('ambient-bg');
+    
+    const colors = [
+        'rgba(220, 20, 60, 0.6)',   // Яскравіший малиновий
+        'rgba(139, 0, 0, 0.5)',     // Насичений темний
+        'rgba(255, 50, 50, 0.4)',   // Світло-червоний
+        'rgba(255, 0, 0, 0.3)'      // Чистий червоний
+    ];
+
+    // Кількість плям (10-15 штук)
+    const orbCount = Math.floor(Math.random() * 3) + 6;
+
+    for (let i = 0; i < orbCount; i++) {
+        const orb = document.createElement('div');
+        orb.classList.add('light-orb');
+
+        // ЗБІЛЬШЕНО РОЗМІР: від 30% до 60% ширини екрану
+        const size = Math.floor(Math.random() * 30) + 30; 
+        orb.style.width = `${size}vw`;
+        orb.style.height = `${size}vw`;
+
+        // Рандомна позиція
+        orb.style.top = `${Math.random() * 120 - 10}%`;
+        orb.style.left = `${Math.random() * 120 - 10}%`;
+
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        orb.style.background = `radial-gradient(circle, ${color} 0%, rgba(0,0,0,0) 70%)`;
+
+        const duration = Math.floor(Math.random() * 15) + 10;
+        orb.style.animationDuration = `${duration}s`;
+
+        const delay = Math.floor(Math.random() * 10) * -1;
+        orb.style.animationDelay = `${delay}s`;
+
+        bgContainer.appendChild(orb);
+    }
+});
+

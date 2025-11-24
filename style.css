@@ -1,11 +1,11 @@
 /* --- 1. ОСНОВНІ НАЛАШТУВАННЯ --- */
 :root {
-    --bg-color: #0f0f0f;
-    --card-bg: #1a1a1a;
+    --bg-color: #050505;
+    --card-bg: rgba(20, 20, 20, 0.6);
     --text-main: #ffffff;
-    --text-secondary: #888888;
-    --accent: #ff0000;
-    --border: #333;
+    --text-secondary: #bbbbbb;
+    --accent: #e91e63;
+    --border: rgba(255, 255, 255, 0.1);
 }
 
 * { box-sizing: border-box; }
@@ -16,38 +16,134 @@ body {
     background-color: var(--bg-color);
     color: var(--text-main);
     overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+    padding-top: 80px;
 }
 
-/* --- 2. ШАПКА --- */
+/* --- AMBIENT BACKGROUND --- */
+.ambient-background {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1; /* Найнижчий шар */
+    overflow: hidden;
+    background: #050505; /* Базовий чорний */
+}
+
+/* Стиль для автоматично згенерованих плям */
+.light-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px); /* Сильне розмиття для м'якості */
+    opacity: 0; /* Початково невидимі */
+    mix-blend-mode: screen; /* Ефект світіння при накладанні */
+    
+    /* Анімація (час задасть JS рандомно) */
+    animation-name: floatOrb;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+/* Траєкторія руху плям */
+@keyframes floatOrb {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.7; /* Пляма з'являється */
+    }
+    50% {
+        transform: translate(10vw, 10vh) scale(1.2);
+        opacity: 0.3; /* Трохи згасає */
+    }
+    80% {
+        opacity: 0.8; /* Знову яскравіша */
+    }
+    100% {
+        transform: translate(-5vw, -10vh) scale(0.9);
+        opacity: 0; /* Зникає в кінці циклу */
+    }
+}
+
+/* --- 2. ШАПКА (FIXED GLASS) --- */
 header {
+    position: fixed; /* Завжди зверху екрану */
+    top: 0; 
+    left: 0;
+    width: 100%;
     padding: 1.5rem 5%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Розподіляє: Лого зліва, Тумблер справа */
     align-items: center;
-    background: rgba(15, 15, 15, 0.9);
-    backdrop-filter: blur(10px);
-    position: sticky;
-    top: 0;
+    background: rgba(5, 5, 5, 0.7); /* Напівпрозорий фон */
+    backdrop-filter: blur(15px); /* Розмиття фону */
+    -webkit-backdrop-filter: blur(15px);
     z-index: 100;
-    border-bottom: 1px solid #222;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s ease;
 }
 
+/* ЛОГО (Зліва) */
 .logo {
     font-weight: 900;
     font-size: 1.5rem;
     letter-spacing: -1px;
     text-transform: uppercase;
     color: var(--text-main);
-    cursor: pointer; /* Курсор-рука */
+    cursor: pointer;
     transition: opacity 0.3s;
+    z-index: 102; /* Важливо: вище за навігацію, щоб завжди клікалось */
 }
 .logo:hover { opacity: 0.8; }
 
-/* ТУМБЛЕР МОВИ (Нейтральний стиль) */
+/* НАВІГАЦІЯ ПО ЦЕНТРУ (WORKS / ABOUT) */
+.header-nav {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%); /* Ідеальне центрування */
+    display: flex;
+    gap: 40px;
+    transition: all 0.5s ease;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 101;
+}
+
+/* Клас для приховування написів при скролі */
+.header-nav.hidden-nav {
+    opacity: 0;
+    transform: translate(-50%, -150%); /* Відлітають вгору */
+    pointer-events: none; /* Щоб не перекривали кліки */
+}
+
+.header-nav button {
+    background: none;
+    border: none;
+    color: var(--text-main);
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px;
+    position: relative;
+    transition: color 0.3s;
+}
+
+.header-nav button:hover {
+    color: var(--accent);
+    text-shadow: 0 0 10px rgba(233, 30, 99, 0.5);
+}
+
+/* ТУМБЛЕР МОВИ (Справа) */
 .lang-toggle-wrapper {
     display: flex;
     align-items: center;
-    gap: 10px; /* Трохи більше місця */
+    gap: 10px;
+    z-index: 102; /* Також вище навігації */
 }
 
 .lang-label {
@@ -57,10 +153,7 @@ header {
     transition: color 0.3s;
 }
 
-/* Підсвічуємо активну мову, якщо хочеш (опціонально) */
-/* .switch input:not(:checked) ~ .lang-label:first-of-type { color: #fff; }
-   .switch input:checked ~ .lang-label:last-of-type { color: #fff; } */
-
+/* Стиль тумблера (нейтральний) */
 .switch {
     position: relative;
     display: inline-block;
@@ -78,10 +171,10 @@ header {
     position: absolute;
     cursor: pointer;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: #333; /* Завжди темний фон */
+    background-color: #333;
     transition: .4s;
     border-radius: 34px;
-    border: 1px solid #444; /* Тонка обводка для стилю */
+    border: 1px solid #444;
 }
 
 .slider:before {
@@ -91,27 +184,31 @@ header {
     width: 16px;
     left: 3px;
     bottom: 3px;
-    background-color: #fff; /* Білий кружечок завжди */
+    background-color: #fff;
     transition: .4s;
     border-radius: 50%;
 }
 
-/* Змінюємо ТІЛЬКИ положення кружечка, колір фону залишається #333 */
 input:checked + .slider {
     background-color: #333; 
 }
 
 input:checked + .slider:before {
     transform: translateX(20px);
-    background-color: #fff; /* Кружечок залишається білим */
+    background-color: #fff;
 }
 
-/* Ефект при наведенні (трохи світлішає фон) */
 .switch:hover .slider {
     background-color: #444;
     border-color: #555;
 }
 
+/* АДАПТИВ */
+@media (max-width: 768px) {
+    .header-nav { display: none; } /* На мобільному ховаємо написи */
+}
+
+/* ... (Банер, Showreel, Tabs, Filters - без змін) ... */
 /* --- 3. БАНЕР --- */
 .hero-banner {
     width: 100%; line-height: 0; background-color: #000;
@@ -120,6 +217,66 @@ input:checked + .slider:before {
 .hero-banner img {
     width: 100%; height: auto; display: block;
     max-height: 80vh; object-fit: cover;
+}
+
+/* --- SHOWREEL (ВІДЕО БЛОК) --- */
+.showreel-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px; /* Відступ до кнопок WORKS/ABOUT */
+    padding: 0 10px; /* Безпечні відступи з боків на мобільному */
+}
+
+.showreel-container {
+    position: relative;
+    width: 100%;
+    max-width: 1600px; /* Максимальна ширина (щоб не розтягувалось на 4к моніторах) */
+    aspect-ratio: 21 / 9; /* Кінематографічний формат (широкий). Можна змінити на 16/9 */
+    max-height: 600px; /* Обмеження висоти */
+    background-color: #111; /* Колір поки немає відео */
+    border-radius: 24px; /* Скруглені кути */
+    overflow: hidden; /* Щоб відео не вилазило за кути */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); /* Тінь для об'єму */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Тонка рамка */
+}
+
+.showreel-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Заповнює весь простір, обрізаючи зайве */
+    display: block;
+}
+
+/* Текст поверх відео (стильно по центру) */
+.showreel-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.2); /* Легке затемнення */
+    pointer-events: none; /* Щоб не заважало клікам (якщо треба) */
+}
+
+.showreel-overlay span {
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: 5px;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    mix-blend-mode: overlay; /* Ефект накладання тексту на відео */
+}
+
+/* Адаптив для мобільних */
+@media (max-width: 768px) {
+    .showreel-container {
+        aspect-ratio: 16 / 9; /* На телефоні робимо більш квадратним */
+        border-radius: 16px;
+    }
+    .showreel-overlay span {
+        font-size: 1rem;
+    }
 }
 
 /* --- 4. НАВІГАЦІЯ ТА ФІЛЬТРИ --- */
@@ -163,7 +320,7 @@ input:checked + .slider:before {
     background: rgba(255,255,255,0.05);
 }
 
-/* --- 5. СІТКА ПРОЕКТІВ --- */
+/* --- 5. СІТКА ПРОЕКТІВ (GLASSMORPHISM) --- */
 .section-content { display: none; padding: 0 5% 4rem 5%; }
 .section-content.active { display: block; animation: fadeIn 0.6s ease; }
 
@@ -173,11 +330,20 @@ input:checked + .slider:before {
     grid-auto-rows: 240px; 
     gap: 20px;
     grid-auto-flow: dense;
+    
+    /* МІНІМАЛЬНА ВИСОТА: Запобігає стрибкам екрану, коли ховаються всі картки */
+    min-height: 500px; 
+    transition: height 0.3s ease;
 }
 
+/* Картка тепер напівпрозора */
 .project-card {
-    background-color: var(--card-bg);
-    border-radius: 8px;
+    background-color: var(--card-bg); /* Напівпрозорий чорний */
+    backdrop-filter: blur(10px); /* Блюр того, що позаду картки (наших плям) */
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border); /* Тонка рамка */
+    
+    border-radius: 12px;
     overflow: hidden;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
@@ -190,26 +356,38 @@ input:checked + .slider:before {
     flex-direction: column;
 }
 
-.project-card.tall {
-    grid-row: span 2; 
-}
+.project-card.tall { grid-row: span 2; }
 
 .project-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    background-color: rgba(40, 40, 40, 0.7); /* Трохи світлішає при наведенні */
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    border-color: rgba(255, 255, 255, 0.3);
     z-index: 2;
 }
 
-.project-card.hidden { display: none; }
-.project-card.animate-in { animation: popIn 0.5s forwards; }
+/* Інфо-блок теж прозорий */
+.card-info {
+    padding: 15px;
+    background: transparent; /* Прозорий, щоб не перекривати блюр картки */
+    z-index: 5;
+    min-height: 80px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
 
 .card-media {
     position: relative;
     width: 100%;
     flex-grow: 1; 
-    background: #000;
+    background: rgba(0,0,0,0.5); /* Підкладка під картинку */
     overflow: hidden;
 }
+
+.project-card.hidden { display: none; }
+.project-card.animate-in { animation: popIn 0.5s forwards; }
 
 .card-media img, .card-media video {
     width: 100%;
@@ -221,18 +399,10 @@ input:checked + .slider:before {
 .card-media video { opacity: 0; transition: opacity 0.4s ease; z-index: 2; }
 .project-card:hover .card-media video { opacity: 1; }
 
-.card-info {
-    padding: 15px;
-    background: var(--card-bg);
-    z-index: 5;
-    min-height: 80px; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-.card-info h3 { margin: 0; font-size: 1.1rem; font-weight: 500; }
+.card-info h3 { margin: 0; font-size: 1.1rem; font-weight: 500; color: #fff; }
 .card-info p { margin: 5px 0 0 0; font-size: 0.9rem; color: var(--text-secondary); }
 
+/* ... (Решта стилів без змін: лайки, модалка, фулскрін) ... */
 /* АДАПТИВ */
 @media (max-width: 600px) {
     .portfolio-grid {
@@ -251,42 +421,85 @@ input:checked + .slider:before {
     }
 }
 
-/* --- КНОПКА ЛАЙКА НА КАРТЦІ --- */
-.card-like-btn {
+/* --- НОВИЙ БЛОК ЛАЙКІВ (КАПСУЛА) --- */
+.like-wrapper {
     position: absolute;
     top: 15px;
     right: 15px;
     z-index: 10;
-    background: rgba(0, 0, 0, 0.5);
+    
+    /* Дизайн капсули */
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Відступ між цифрою і серцем */
+    background: rgba(0, 0, 0, 0.6); /* Темний напівпрозорий фон */
     backdrop-filter: blur(4px);
+    padding: 6px 12px; /* Внутрішні відступи */
+    border-radius: 50px; /* Закруглені краї */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+/* Ефект при наведенні на всю капсулу */
+.like-wrapper:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: scale(1.05);
+}
+
+.like-wrapper:hover .like-count {
+    color: #000; /* Цифра стає чорною на білому фоні */
+}
+
+.like-wrapper:hover .card-like-btn svg {
+    fill: #000; /* Серце стає чорним (якщо не лайкнуте) */
+}
+
+/* --- ЦИФРА --- */
+.like-count {
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    min-width: 10px; /* Щоб не скакало при зміні цифр */
+    text-align: center;
+    transition: color 0.3s;
+}
+
+/* --- КНОПКА СЕРЦЯ (всередині капсули) --- */
+.card-like-btn {
+    background: none;
     border: none;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
+    padding: 0;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #fff;
-    transition: all 0.3s ease;
-    opacity: 1; 
-    transform: translateY(0);
 }
 
 .card-like-btn svg {
-    width: 20px; height: 20px; fill: #fff; transition: fill 0.3s ease;
+    width: 100%;
+    height: 100%;
+    fill: #fff;
+    transition: fill 0.3s ease, transform 0.2s;
 }
 
-.card-like-btn.liked svg { fill: #e91e63; }
-
-.card-like-btn:hover {
-    background: rgba(255, 255, 255, 1);
-    transform: scale(1.1);
+/* АКТИВНИЙ СТАН (Лайкнуто) */
+.like-wrapper.active {
+    border-color: rgba(233, 30, 99, 0.5);
 }
 
-.card-like-btn:hover svg { fill: #000; }
-.card-like-btn.liked:hover svg { fill: #e91e63; }
+.card-like-btn.liked svg {
+    fill: #e91e63; /* Червоне серце */
+    filter: drop-shadow(0 0 5px rgba(233, 30, 99, 0.6));
+}
 
+/* При наведенні, якщо вже лайкнуто - серце залишається червоним */
+.like-wrapper:hover .card-like-btn.liked svg {
+    fill: #e91e63;
+}
 
 /* --- 6. МОДАЛЬНЕ ВІКНО --- */
 .modal-overlay {
@@ -413,27 +626,145 @@ input:checked + .slider:before {
 }
 #modalImage { cursor: zoom-in; }
 
-.about-container { max-width: 800px; margin: 0 auto; line-height: 1.8; }
-.about-container h2 { font-size: 2.5rem; margin-bottom: 1rem; }
-.about-text { font-size: 1.1rem; color: #ccc; }
-
-/* --- ЛІЧИЛЬНИК ЛАЙКІВ --- */
-.like-count {
-    position: absolute;
-    top: 23px; /* Вирівнювання по висоті з кнопкою */
-    right: 60px; /* Зліва від кнопки (кнопка має width 35px + відступ 15px) */
-    z-index: 10;
-    color: #fff;
-    font-size: 0.9rem;
-    font-weight: 700;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.8); /* Тінь, щоб читалося на будь-якому фоні */
-    opacity: 1; /* Завжди видно */
-    pointer-events: none; /* Щоб не заважало клікам */
-    transition: transform 0.2s;
+/* --- СТОРІНКА "ПРО МЕНЕ" (ЦЕНТРОВАНА) --- */
+.about-container {
+    max-width: 900px;
+    margin: 0 auto;
+    color: var(--text-main);
+    text-align: center; /* Центруємо весь текст */
 }
 
-/* Анімація при зміні (опціонально) */
-.like-count.updated {
+.about-title {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(90deg, #fff, #aaa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.about-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #ccc;
+    margin-bottom: 3rem;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center; /* Текст всередині блоку теж по центру */
+}
+
+.about-text p { margin-bottom: 15px; }
+.about-text p:last-child { margin-bottom: 0; }
+
+/* --- НАВИЧКИ (SKILLS) --- */
+.skills-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    /* Прибираємо лінію збоку, додаємо знизу або просто залишаємо текст */
+    border: none; 
+    padding: 0;
+    display: inline-block;
+    position: relative;
+}
+
+/* Декоративна риска під заголовком */
+.skills-section h3::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: var(--accent);
+    margin: 10px auto 0 auto; /* Центруємо риску */
+    border-radius: 2px;
+}
+
+.skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 3rem;
+    justify-content: center; /* Центруємо теги */
+}
+
+.skill-tag {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    font-size: 0.9rem;
+    color: #ddd;
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+.skill-tag:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px);
+    color: #fff;
+}
+
+/* --- СОЦМЕРЕЖІ (GLASS BUTTONS) --- */
+.social-links {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center; /* Центруємо кнопки */
+}
+
+.glass-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 30px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+/* Стилі для SVG */
+.glass-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: #fff;
+    transition: transform 0.3s;
+}
+
+/* Стилі для Твоїх Картинок (IMG), якщо ти заміниш SVG */
+.glass-btn img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    transition: transform 0.3s;
+}
+
+.glass-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.glass-btn:hover svg, 
+.glass-btn:hover img {
     transform: scale(1.2);
-    color: #e91e63;
+}
+
+/* АДАПТИВ */
+@media (max-width: 600px) {
+    .about-title { font-size: 2rem; }
+    .social-links { flex-direction: column; }
+    .glass-btn { width: 100%; justify-content: center; }
 }
